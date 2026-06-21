@@ -24,9 +24,10 @@ class Antonieta_Addi_Fee {
 
     private static function get_defaults() {
         return array(
-            'enabled'    => 'no',
-            'percentage' => '10',
-            'label'      => 'Adicional por financiación Addi',
+            'enabled'     => 'no',
+            'gateway_id'  => self::PAYMENT_METHOD,
+            'percentage'  => '10',
+            'label'       => 'Adicional por financiación Addi',
         );
     }
 
@@ -74,10 +75,19 @@ class Antonieta_Addi_Fee {
             $label    = $defaults['label'];
         }
 
+        $gateway_id = isset( $input['gateway_id'] )
+            ? sanitize_key( wp_unslash( $input['gateway_id'] ) )
+            : '';
+
+        if ( '' === $gateway_id ) {
+            $gateway_id = self::PAYMENT_METHOD;
+        }
+
         return array(
-            'enabled'    => ! empty( $input['enabled'] ) ? 'yes' : 'no',
-            'percentage' => (string) $percentage,
-            'label'      => $label,
+            'enabled'     => ! empty( $input['enabled'] ) ? 'yes' : 'no',
+            'gateway_id'  => $gateway_id,
+            'percentage'  => (string) $percentage,
+            'label'       => $label,
         );
     }
 
@@ -122,6 +132,23 @@ class Antonieta_Addi_Fee {
                                 >
                                 <?php echo esc_html__( 'Aplicar el recargo al seleccionar Addi', 'antonieta-core' ); ?>
                             </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="antonieta-addi-gateway-id"><?php echo esc_html__( 'ID del método de pago', 'antonieta-core' ); ?></label>
+                        </th>
+                        <td>
+                            <input
+                                id="antonieta-addi-gateway-id"
+                                name="<?php echo esc_attr( self::OPTION_NAME ); ?>[gateway_id]"
+                                type="text"
+                                value="<?php echo esc_attr( $settings['gateway_id'] ); ?>"
+                                class="regular-text code"
+                                maxlength="100"
+                                spellcheck="false"
+                            >
+                            <p class="description"><?php echo esc_html__( 'Valor exacto del radio payment_method. Predeterminado: addi.', 'antonieta-core' ); ?></p>
                         </td>
                     </tr>
                     <tr>
@@ -209,7 +236,7 @@ class Antonieta_Addi_Fee {
             }
         }
 
-        if ( $chosen_payment !== self::PAYMENT_METHOD ) {
+        if ( $chosen_payment !== $settings['gateway_id'] ) {
             return;
         }
 

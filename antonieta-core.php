@@ -3,7 +3,7 @@
  * Plugin Name:       Antonieta Core
  * Plugin URI:        https://antonietaplus.com
  * Description:       Funcionalidades core de WooCommerce, checkout, POS y búsqueda EAN para Antonieta Plus.
- * Version:           1.3.0
+ * Version:           1.4.0
  * Author:            Parchita Creative
  * Author URI:        https://parchitacreative.com
  * Text Domain:       antonieta-core
@@ -16,7 +16,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'ANTONIETA_CORE_VERSION', '1.3.0' );
+define( 'ANTONIETA_CORE_VERSION', '1.4.0' );
 define( 'ANTONIETA_CORE_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'ANTONIETA_CORE_URL',     plugin_dir_url( __FILE__ ) );
 

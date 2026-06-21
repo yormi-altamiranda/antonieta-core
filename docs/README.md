@@ -14,7 +14,7 @@
 
 **Información del Plugin:**
 
-- Versión: 1.3.0
+- Versión: 1.4.0
 - Requiere: WordPress 6.0+, PHP 8.0+, WooCommerce 8.0+
 - Compatibilidad: HPOS (High Performance Order Storage)
 - Dominio de traducción: `antonieta-core`
@@ -141,6 +141,12 @@ En [pos-meta-fields.js](../assets/js/pos-meta-fields.js), edita el `<select>` de
 ---
 
 ## 📝 Changelog
+
+### v1.4.0
+
+- ID del método de pago configurable para SisteCrédito y Addi
+- Valores predeterminados `wcsistecredito` y `addi`
+- Sanitización y recuperación automática del ID predeterminado cuando el campo queda vacío
 
 ### v1.3.0
 

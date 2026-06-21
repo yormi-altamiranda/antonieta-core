@@ -106,16 +106,17 @@ wp plugin install antonieta-core --activate
 
 1. Desactivar primero cualquier plugin o configuración anterior que cobre un recargo para Addi.
 2. Ir a **WordPress Admin → WooCommerce → Recargo Addi**.
-3. Definir el porcentaje y el mensaje que verá el cliente.
-4. Marcar **Activar recargo**.
-5. Hacer clic en **Guardar cambios**.
+3. Confirmar el ID del método de pago (`addi` por defecto).
+4. Definir el porcentaje y el mensaje que verá el cliente.
+5. Marcar **Activar recargo**.
+6. Hacer clic en **Guardar cambios**.
 
 Valores predeterminados:
 
 - Estado: desactivado, para evitar cobros duplicados
 - Porcentaje: 10%
 - Mensaje: `Adicional por financiación Addi`
-- Gateway: `addi`
+- ID de gateway: `addi` (editable)
 - Impuestos: no gravable
 
 ---
@@ -124,9 +125,10 @@ Valores predeterminados:
 
 1. Ir a **WordPress Admin → WooCommerce → Recargo SisteCrédito**.
 2. Activar o desactivar la casilla **Activar recargo**.
-3. Indicar el porcentaje entre `0` y `100` (admite dos decimales).
-4. Editar el mensaje que verá el cliente en los totales.
-5. Hacer clic en **Guardar cambios**.
+3. Confirmar el ID del método de pago (`wcsistecredito` por defecto).
+4. Indicar el porcentaje entre `0` y `100` (admite dos decimales).
+5. Editar el mensaje que verá el cliente en los totales.
+6. Hacer clic en **Guardar cambios**.
 
 Valores predeterminados:
 
@@ -135,7 +137,9 @@ Valores predeterminados:
 - Mensaje: `Adicional por financiación SisteCrédito`
 - Impuestos: no gravable
 
-La configuración solo afecta el gateway `wcsistecredito`; no modifica Addi ni otros métodos de pago.
+La configuración solo afecta el ID de gateway indicado en ese campo; no modifica Addi ni otros métodos de pago mientras conserve el valor predeterminado `wcsistecredito`.
+
+Si el proveedor cambia el valor del radio `payment_method`, actualiza únicamente el campo **ID del método de pago**. Si se guarda vacío, Antonieta Core restaura el ID predeterminado.
 
 ---
 

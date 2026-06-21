@@ -24,9 +24,10 @@ class Antonieta_Sistecredito_Fee {
 
     private static function get_defaults() {
         return array(
-            'enabled'    => 'yes',
-            'percentage' => '10',
-            'label'      => 'Adicional por financiación SisteCrédito',
+            'enabled'     => 'yes',
+            'gateway_id'  => self::PAYMENT_METHOD,
+            'percentage'  => '10',
+            'label'       => 'Adicional por financiación SisteCrédito',
         );
     }
 
@@ -83,10 +84,19 @@ class Antonieta_Sistecredito_Fee {
             $label    = $defaults['label'];
         }
 
+        $gateway_id = isset( $input['gateway_id'] )
+            ? sanitize_key( wp_unslash( $input['gateway_id'] ) )
+            : '';
+
+        if ( '' === $gateway_id ) {
+            $gateway_id = self::PAYMENT_METHOD;
+        }
+
         return array(
-            'enabled'    => ! empty( $input['enabled'] ) ? 'yes' : 'no',
-            'percentage' => (string) $percentage,
-            'label'      => $label,
+            'enabled'     => ! empty( $input['enabled'] ) ? 'yes' : 'no',
+            'gateway_id'  => $gateway_id,
+            'percentage'  => (string) $percentage,
+            'label'       => $label,
         );
     }
 
@@ -134,6 +144,23 @@ class Antonieta_Sistecredito_Fee {
                                 >
                                 <?php echo esc_html__( 'Aplicar el recargo al seleccionar SisteCrédito', 'antonieta-core' ); ?>
                             </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">
+                            <label for="antonieta-sistecredito-gateway-id"><?php echo esc_html__( 'ID del método de pago', 'antonieta-core' ); ?></label>
+                        </th>
+                        <td>
+                            <input
+                                id="antonieta-sistecredito-gateway-id"
+                                name="<?php echo esc_attr( self::OPTION_NAME ); ?>[gateway_id]"
+                                type="text"
+                                value="<?php echo esc_attr( $settings['gateway_id'] ); ?>"
+                                class="regular-text code"
+                                maxlength="100"
+                                spellcheck="false"
+                            >
+                            <p class="description"><?php echo esc_html__( 'Valor exacto del radio payment_method. Predeterminado: wcsistecredito.', 'antonieta-core' ); ?></p>
                         </td>
                     </tr>
                     <tr>
@@ -227,7 +254,7 @@ class Antonieta_Sistecredito_Fee {
             }
         }
 
-        if ( $chosen_payment !== self::PAYMENT_METHOD ) {
+        if ( $chosen_payment !== $settings['gateway_id'] ) {
             return;
         }
 
