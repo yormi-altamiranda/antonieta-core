@@ -1,6 +1,6 @@
 <?php
 /**
- * Antonieta_Financing_Fees
+ * PC_Payment_Gateway_Adjustments
  *
  * Gestiona reglas dinámicas de recargos y descuentos según
  * el método de pago seleccionado en WooCommerce.
@@ -8,43 +8,21 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class Antonieta_Financing_Fees {
+class PC_Payment_Gateway_Adjustments {
 
-    private const OPTION_NAME = 'antonieta_financing_rules';
-
-    private const LEGACY_UNIFIED_OPTION      = 'antonieta_financing_fee_settings';
-    private const LEGACY_SISTECREDITO_OPTION = 'antonieta_sistecredito_fee_settings';
-    private const LEGACY_ADDI_OPTION          = 'antonieta_addi_fee_settings';
+    private const OPTION_NAME = 'pc_payment_gateway_adjustment_rules';
 
     public static function init() {
         add_action( 'woocommerce_checkout_update_order_review', array( __CLASS__, 'save_payment_method' ), 10, 1 );
         add_action( 'woocommerce_cart_calculate_fees', array( __CLASS__, 'add_adjustment' ), 99, 1 );
         add_action( 'wp_footer', array( __CLASS__, 'refresh_checkout_on_payment_change' ), 99 );
-        add_action( 'admin_init', array( __CLASS__, 'maybe_migrate_settings' ), 5 );
         add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
         add_action( 'admin_menu', array( __CLASS__, 'add_settings_page' ), 99 );
-        add_filter( 'option_page_capability_antonieta_financing_rules_group', array( __CLASS__, 'settings_capability' ) );
+        add_filter( 'option_page_capability_pc_gateway_adjustments_group', array( __CLASS__, 'settings_capability' ) );
     }
 
     private static function get_default_rules() {
-        return array(
-            array(
-                'enabled'    => 'yes',
-                'name'       => 'SisteCrédito',
-                'gateway_id' => 'wcsistecredito',
-                'type'       => 'fee',
-                'percentage' => '10',
-                'label'      => 'Adicional por financiación SisteCrédito',
-            ),
-            array(
-                'enabled'    => 'no',
-                'name'       => 'Addi',
-                'gateway_id' => 'addi',
-                'type'       => 'fee',
-                'percentage' => '10',
-                'label'      => 'Adicional por financiación Addi',
-            ),
-        );
+        return array();
     }
 
     private static function get_blank_rule() {
@@ -79,74 +57,14 @@ class Antonieta_Financing_Fees {
         return array( 'rules' => $rules );
     }
 
-    private static function legacy_method_to_rule( $method, $name, $default_gateway, $default_label, $default_enabled ) {
-        $method = is_array( $method ) ? $method : array();
-
-        return array(
-            'enabled'    => isset( $method['enabled'] ) ? $method['enabled'] : $default_enabled,
-            'name'       => $name,
-            'gateway_id' => ! empty( $method['gateway_id'] ) ? $method['gateway_id'] : $default_gateway,
-            'type'       => 'fee',
-            'percentage' => isset( $method['percentage'] ) ? $method['percentage'] : '10',
-            'label'      => ! empty( $method['label'] ) ? $method['label'] : $default_label,
-        );
-    }
-
-    private static function get_legacy_settings() {
-        $unified = get_option( self::LEGACY_UNIFIED_OPTION, false );
-
-        if ( is_array( $unified ) ) {
-            $sistecredito = isset( $unified['sistecredito'] ) ? $unified['sistecredito'] : array();
-            $addi          = isset( $unified['addi'] ) ? $unified['addi'] : array();
-        } else {
-            $sistecredito = get_option( self::LEGACY_SISTECREDITO_OPTION, array() );
-            $addi          = get_option( self::LEGACY_ADDI_OPTION, array() );
-        }
-
-        return array(
-            'rules' => array(
-                self::legacy_method_to_rule(
-                    $sistecredito,
-                    'SisteCrédito',
-                    'wcsistecredito',
-                    'Adicional por financiación SisteCrédito',
-                    'yes'
-                ),
-                self::legacy_method_to_rule(
-                    $addi,
-                    'Addi',
-                    'addi',
-                    'Adicional por financiación Addi',
-                    'no'
-                ),
-            ),
-        );
-    }
-
     private static function get_settings() {
-        $settings = get_option( self::OPTION_NAME, false );
-
-        if ( false === $settings ) {
-            return self::normalize_settings( self::get_legacy_settings() );
-        }
-
+        $settings = get_option( self::OPTION_NAME, array( 'rules' => self::get_default_rules() ) );
         return self::normalize_settings( $settings );
-    }
-
-    /**
-     * Convierte automáticamente las configuraciones anteriores en reglas.
-     */
-    public static function maybe_migrate_settings() {
-        if ( false !== get_option( self::OPTION_NAME, false ) ) {
-            return;
-        }
-
-        update_option( self::OPTION_NAME, self::get_legacy_settings() );
     }
 
     public static function register_settings() {
         register_setting(
-            'antonieta_financing_rules_group',
+            'pc_gateway_adjustments_group',
             self::OPTION_NAME,
             array(
                 'type'              => 'array',
@@ -221,7 +139,7 @@ class Antonieta_Financing_Fees {
 
                 add_settings_error(
                     self::OPTION_NAME,
-                    'antonieta_financing_missing_gateway_' . $position,
+                    'pc_gateway_adjustments_missing_gateway_' . $position,
                     sprintf( 'La regla “%s” fue desactivada porque no tiene un ID de método de pago.', $rule['name'] ),
                     'warning'
                 );
@@ -230,7 +148,7 @@ class Antonieta_Financing_Fees {
 
                 add_settings_error(
                     self::OPTION_NAME,
-                    'antonieta_financing_duplicate_gateway_' . $position,
+                    'pc_gateway_adjustments_duplicate_gateway_' . $position,
                     sprintf( 'La regla “%s” fue desactivada porque el ID “%s” está repetido.', $rule['name'], $rule['gateway_id'] ),
                     'error'
                 );
@@ -251,7 +169,7 @@ class Antonieta_Financing_Fees {
             'Ajustes por pasarela',
             'Ajustes por pasarela',
             'manage_woocommerce',
-            'antonieta-financing-rules',
+            'pc-payment-gateway-adjustments',
             array( __CLASS__, 'render_settings_page' )
         );
     }
@@ -259,16 +177,16 @@ class Antonieta_Financing_Fees {
     private static function render_rule_row( $index, $rule ) {
         $rule         = self::normalize_rule( $rule );
         $field_prefix = self::OPTION_NAME . '[rules][' . $index . ']';
-        $id_prefix    = 'antonieta-rule-' . $index;
+        $id_prefix    = 'pc-gateway-rule-' . $index;
         ?>
-        <tr class="antonieta-financing-rule">
+        <tr class="pc-gateway-adjustment-rule">
             <td>
                 <input
                     type="checkbox"
                     name="<?php echo esc_attr( $field_prefix ); ?>[enabled]"
                     value="yes"
                     <?php checked( $rule['enabled'], 'yes' ); ?>
-                    aria-label="<?php echo esc_attr__( 'Activar regla', 'antonieta-core' ); ?>"
+                    aria-label="<?php echo esc_attr__( 'Activar regla', 'ajustes-pasarela-woocommerce' ); ?>"
                 >
             </td>
             <td>
@@ -293,10 +211,10 @@ class Antonieta_Financing_Fees {
                 >
             </td>
             <td>
-                <label class="screen-reader-text" for="<?php echo esc_attr( $id_prefix ); ?>-type"><?php echo esc_html__( 'Tipo', 'antonieta-core' ); ?></label>
+                <label class="screen-reader-text" for="<?php echo esc_attr( $id_prefix ); ?>-type"><?php echo esc_html__( 'Tipo', 'ajustes-pasarela-woocommerce' ); ?></label>
                 <select id="<?php echo esc_attr( $id_prefix ); ?>-type" name="<?php echo esc_attr( $field_prefix ); ?>[type]">
-                    <option value="fee" <?php selected( $rule['type'], 'fee' ); ?>><?php echo esc_html__( 'Recargo', 'antonieta-core' ); ?></option>
-                    <option value="discount" <?php selected( $rule['type'], 'discount' ); ?>><?php echo esc_html__( 'Descuento', 'antonieta-core' ); ?></option>
+                    <option value="fee" <?php selected( $rule['type'], 'fee' ); ?>><?php echo esc_html__( 'Recargo', 'ajustes-pasarela-woocommerce' ); ?></option>
+                    <option value="discount" <?php selected( $rule['type'], 'discount' ); ?>><?php echo esc_html__( 'Descuento', 'ajustes-pasarela-woocommerce' ); ?></option>
                 </select>
             </td>
             <td>
@@ -308,7 +226,7 @@ class Antonieta_Financing_Fees {
                     max="100"
                     step="0.01"
                     class="small-text"
-                    aria-label="<?php echo esc_attr__( 'Porcentaje', 'antonieta-core' ); ?>"
+                    aria-label="<?php echo esc_attr__( 'Porcentaje', 'ajustes-pasarela-woocommerce' ); ?>"
                 > %
             </td>
             <td>
@@ -322,8 +240,8 @@ class Antonieta_Financing_Fees {
                 >
             </td>
             <td>
-                <button type="button" class="button-link-delete antonieta-remove-rule">
-                    <?php echo esc_html__( 'Eliminar', 'antonieta-core' ); ?>
+                <button type="button" class="button-link-delete pc-remove-gateway-rule">
+                    <?php echo esc_html__( 'Eliminar', 'ajustes-pasarela-woocommerce' ); ?>
                 </button>
             </td>
         </tr>
@@ -338,26 +256,26 @@ class Antonieta_Financing_Fees {
         $settings = self::get_settings();
         ?>
         <div class="wrap">
-            <h1><?php echo esc_html__( 'Ajustes por pasarela', 'antonieta-core' ); ?></h1>
-            <p><?php echo esc_html__( 'Añade recargos o descuentos según el método de pago seleccionado por el cliente.', 'antonieta-core' ); ?></p>
-            <p><strong><?php echo esc_html__( 'Importante:', 'antonieta-core' ); ?></strong> <?php echo esc_html__( 'desactiva cualquier otro plugin que aplique el mismo ajuste para evitar cargos duplicados.', 'antonieta-core' ); ?></p>
+            <h1><?php echo esc_html__( 'Ajustes por pasarela', 'ajustes-pasarela-woocommerce' ); ?></h1>
+            <p><?php echo esc_html__( 'Añade recargos o descuentos según el método de pago seleccionado por el cliente.', 'ajustes-pasarela-woocommerce' ); ?></p>
+            <p><strong><?php echo esc_html__( 'Importante:', 'ajustes-pasarela-woocommerce' ); ?></strong> <?php echo esc_html__( 'desactiva cualquier otro plugin que aplique el mismo ajuste para evitar cargos duplicados.', 'ajustes-pasarela-woocommerce' ); ?></p>
 
             <?php settings_errors( self::OPTION_NAME ); ?>
 
             <form method="post" action="options.php">
-                <?php settings_fields( 'antonieta_financing_rules_group' ); ?>
+                <?php settings_fields( 'pc_gateway_adjustments_group' ); ?>
 
-                <div class="antonieta-rules-table-wrap" style="overflow-x:auto;">
-                    <table class="widefat striped" id="antonieta-financing-rules">
+                <div class="pc-gateway-rules-table-wrap" style="overflow-x:auto;">
+                    <table class="widefat striped" id="pc-payment-gateway-rules">
                         <thead>
                             <tr>
-                                <th><?php echo esc_html__( 'Activo', 'antonieta-core' ); ?></th>
-                                <th><?php echo esc_html__( 'Nombre', 'antonieta-core' ); ?></th>
-                                <th><?php echo esc_html__( 'ID de pasarela', 'antonieta-core' ); ?></th>
-                                <th><?php echo esc_html__( 'Tipo', 'antonieta-core' ); ?></th>
-                                <th><?php echo esc_html__( 'Porcentaje', 'antonieta-core' ); ?></th>
-                                <th><?php echo esc_html__( 'Mensaje', 'antonieta-core' ); ?></th>
-                                <th><?php echo esc_html__( 'Acciones', 'antonieta-core' ); ?></th>
+                                <th><?php echo esc_html__( 'Activo', 'ajustes-pasarela-woocommerce' ); ?></th>
+                                <th><?php echo esc_html__( 'Nombre', 'ajustes-pasarela-woocommerce' ); ?></th>
+                                <th><?php echo esc_html__( 'ID de pasarela', 'ajustes-pasarela-woocommerce' ); ?></th>
+                                <th><?php echo esc_html__( 'Tipo', 'ajustes-pasarela-woocommerce' ); ?></th>
+                                <th><?php echo esc_html__( 'Porcentaje', 'ajustes-pasarela-woocommerce' ); ?></th>
+                                <th><?php echo esc_html__( 'Mensaje', 'ajustes-pasarela-woocommerce' ); ?></th>
+                                <th><?php echo esc_html__( 'Acciones', 'ajustes-pasarela-woocommerce' ); ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -371,24 +289,24 @@ class Antonieta_Financing_Fees {
                 </div>
 
                 <p>
-                    <button type="button" class="button" id="antonieta-add-financing-rule">
-                        <?php echo esc_html__( 'Añadir regla', 'antonieta-core' ); ?>
+                    <button type="button" class="button" id="pc-add-payment-gateway-rule">
+                        <?php echo esc_html__( 'Añadir regla', 'ajustes-pasarela-woocommerce' ); ?>
                     </button>
                 </p>
 
                 <?php submit_button(); ?>
             </form>
 
-            <template id="antonieta-financing-rule-template">
+            <template id="pc-payment-gateway-rule-template">
                 <?php self::render_rule_row( '__INDEX__', self::get_blank_rule() ); ?>
             </template>
         </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const tableBody = document.querySelector('#antonieta-financing-rules tbody');
-                const addButton = document.querySelector('#antonieta-add-financing-rule');
-                const template = document.querySelector('#antonieta-financing-rule-template');
+                const tableBody = document.querySelector('#pc-payment-gateway-rules tbody');
+                const addButton = document.querySelector('#pc-add-payment-gateway-rule');
+                const template = document.querySelector('#pc-payment-gateway-rule-template');
                 let nextIndex = <?php echo (int) count( $settings['rules'] ); ?>;
 
                 if (!tableBody || !addButton || !template) {
@@ -401,7 +319,7 @@ class Antonieta_Financing_Fees {
                 });
 
                 tableBody.addEventListener('click', function(event) {
-                    const removeButton = event.target.closest('.antonieta-remove-rule');
+                    const removeButton = event.target.closest('.pc-remove-gateway-rule');
 
                     if (removeButton) {
                         removeButton.closest('tr').remove();
@@ -508,8 +426,8 @@ class Antonieta_Financing_Fees {
         echo '<script>
             jQuery(function($) {
                 $(document.body)
-                    .off("change.antonietaFees", "input[name=\'payment_method\']")
-                    .on("change.antonietaFees", "input[name=\'payment_method\']", function() {
+                    .off("change.pcGatewayAdjustments", "input[name=\'payment_method\']")
+                    .on("change.pcGatewayAdjustments", "input[name=\'payment_method\']", function() {
                     setTimeout(function() {
                         $(document.body).trigger("update_checkout");
                     }, 150);
