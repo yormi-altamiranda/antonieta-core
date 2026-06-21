@@ -2,6 +2,10 @@
 
 Plugin independiente para aplicar recargos o descuentos porcentuales según el método de pago seleccionado en el checkout clásico de WooCommerce.
 
+- Versión: 1.0.0
+- Requiere: WordPress 6.0+, PHP 8.0+ y WooCommerce 8.0+
+- Licencia: GPL-2.0-or-later
+
 ## Funcionalidades
 
 - Reglas dinámicas para cualquier pasarela de pago.
@@ -35,3 +39,20 @@ El ID debe coincidir exactamente con el valor del campo `payment_method` del gat
 - Desactivar otros plugins que apliquen ajustes sobre la misma pasarela para evitar duplicados.
 - Probar recargos, descuentos, impuestos y pedidos en un ambiente de pruebas antes de usarlo en producción.
 - Esta versión utiliza los eventos del checkout clásico de WooCommerce.
+
+## Datos almacenados
+
+Las reglas se guardan en la opción `pc_payment_gateway_adjustment_rules`. Al desinstalar el plugin desde WordPress, esta opción se elimina.
+
+## Estructura
+
+```text
+ajustes-pasarela-woocommerce/
+├── ajustes-pasarela-woocommerce.php
+├── includes/
+│   └── class-payment-gateway-adjustments.php
+├── LICENSE
+├── uninstall.php
+├── README.md
+└── readme.txt
+```

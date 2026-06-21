@@ -1,15 +1,19 @@
 <?php
 /**
  * Plugin Name:       Ajustes por Pasarela para WooCommerce
- * Plugin URI:        https://parchitacreative.com
+ * Plugin URI:        https://parchitacreative.com/ajustes-pasarela-woocommerce/
  * Description:       Permite crear recargos o descuentos porcentuales según el método de pago seleccionado.
  * Version:           1.0.0
  * Author:            Parchita Creative
  * Author URI:        https://parchitacreative.com
+ * License:           GPL-2.0-or-later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ * Update URI:        https://parchitacreative.com/ajustes-pasarela-woocommerce/
  * Text Domain:       ajustes-pasarela-woocommerce
  * Domain Path:       /languages
  * Requires at least: 6.0
  * Requires PHP:      8.0
+ * Requires Plugins:  woocommerce
  * WC requires at least: 8.0
  */
 
