@@ -10,10 +10,11 @@
 - Validación de variantes en el carrito
 - Frontend hooks sin dependencia de Shoptimizer
 - Recargo financiero de SisteCrédito en el checkout clásico
+- Recargo financiero configurable de Addi en el checkout clásico
 
 **Información del Plugin:**
 
-- Versión: 1.1.0
+- Versión: 1.3.0
 - Requiere: WordPress 6.0+, PHP 8.0+, WooCommerce 8.0+
 - Compatibilidad: HPOS (High Performance Order Storage)
 - Dominio de traducción: `antonieta-core`
@@ -40,7 +41,8 @@ antonieta-core/
     ├── class-order-meta.php         # Metadatos de pedido (Canal/Pauta)
     ├── class-search-ean.php         # Búsqueda por EAN en POS
     ├── class-frontend.php           # Hooks de frontend
-    └── class-sistecredito-fee.php   # Recargo de SisteCrédito
+    ├── class-sistecredito-fee.php   # Recargo de SisteCrédito
+    └── class-addi-fee.php           # Recargo de Addi
 ```
 
 ---
@@ -139,6 +141,21 @@ En [pos-meta-fields.js](../assets/js/pos-meta-fields.js), edita el `<select>` de
 ---
 
 ## 📝 Changelog
+
+### v1.3.0
+
+- Recargo configurable para el gateway Addi (`addi`)
+- Pantalla **WooCommerce → Recargo Addi**
+- Estado, porcentaje y mensaje editables desde WordPress
+- Recargo Addi desactivado por defecto para prevenir duplicados con configuraciones existentes
+- Un solo evento de actualización del checkout para los recargos financieros
+
+### v1.2.0
+
+- Pantalla **WooCommerce → Recargo SisteCrédito**
+- Control para activar o desactivar el recargo
+- Porcentaje y mensaje configurables desde WordPress
+- Valores validados y limitados antes de guardarse
 
 ### v1.1.0
 

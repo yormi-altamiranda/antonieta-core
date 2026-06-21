@@ -1,17 +1,17 @@
 <?php
 /**
- * Antonieta_Sistecredito_Fee
+ * Antonieta_Addi_Fee
  *
- * Gestiona el recargo configurable de SisteCrédito sobre el subtotal
+ * Gestiona el recargo configurable de Addi sobre el subtotal
  * de productos del carrito.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class Antonieta_Sistecredito_Fee {
+class Antonieta_Addi_Fee {
 
-    private const PAYMENT_METHOD = 'wcsistecredito';
-    private const OPTION_NAME    = 'antonieta_sistecredito_fee_settings';
+    private const PAYMENT_METHOD = 'addi';
+    private const OPTION_NAME    = 'antonieta_addi_fee_settings';
 
     public static function init() {
         add_action( 'woocommerce_checkout_update_order_review', array( __CLASS__, 'save_payment_method' ), 10, 1 );
@@ -19,14 +19,14 @@ class Antonieta_Sistecredito_Fee {
         add_action( 'wp_footer', array( __CLASS__, 'refresh_checkout_on_payment_change' ), 99 );
         add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
         add_action( 'admin_menu', array( __CLASS__, 'add_settings_page' ), 99 );
-        add_filter( 'option_page_capability_antonieta_sistecredito_fee_group', array( __CLASS__, 'settings_capability' ) );
+        add_filter( 'option_page_capability_antonieta_addi_fee_group', array( __CLASS__, 'settings_capability' ) );
     }
 
     private static function get_defaults() {
         return array(
-            'enabled'    => 'yes',
+            'enabled'    => 'no',
             'percentage' => '10',
-            'label'      => 'Adicional por financiación SisteCrédito',
+            'label'      => 'Adicional por financiación Addi',
         );
     }
 
@@ -40,12 +40,9 @@ class Antonieta_Sistecredito_Fee {
         return wp_parse_args( $settings, self::get_defaults() );
     }
 
-    /**
-     * Registra la opción administrable mediante la Settings API de WordPress.
-     */
     public static function register_settings() {
         register_setting(
-            'antonieta_sistecredito_fee_group',
+            'antonieta_addi_fee_group',
             self::OPTION_NAME,
             array(
                 'type'              => 'array',
@@ -55,16 +52,10 @@ class Antonieta_Sistecredito_Fee {
         );
     }
 
-    /**
-     * Permite guardar a administradores y gestores de tienda autorizados.
-     */
     public static function settings_capability() {
         return 'manage_woocommerce';
     }
 
-    /**
-     * Sanitiza y limita los valores guardados desde el administrador.
-     */
     public static function sanitize_settings( $input ) {
         $input = is_array( $input ) ? $input : array();
 
@@ -90,23 +81,17 @@ class Antonieta_Sistecredito_Fee {
         );
     }
 
-    /**
-     * Añade la configuración bajo el menú principal de WooCommerce.
-     */
     public static function add_settings_page() {
         add_submenu_page(
             'woocommerce',
-            'Recargo SisteCrédito',
-            'Recargo SisteCrédito',
+            'Recargo Addi',
+            'Recargo Addi',
             'manage_woocommerce',
-            'antonieta-sistecredito-fee',
+            'antonieta-addi-fee',
             array( __CLASS__, 'render_settings_page' )
         );
     }
 
-    /**
-     * Muestra los controles de configuración del recargo.
-     */
     public static function render_settings_page() {
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return;
@@ -115,11 +100,14 @@ class Antonieta_Sistecredito_Fee {
         $settings = self::get_settings();
         ?>
         <div class="wrap">
-            <h1><?php echo esc_html__( 'Recargo SisteCrédito', 'antonieta-core' ); ?></h1>
-            <p><?php echo esc_html__( 'Configura el recargo aplicado al subtotal de productos cuando el cliente selecciona SisteCrédito.', 'antonieta-core' ); ?></p>
+            <h1><?php echo esc_html__( 'Recargo Addi', 'antonieta-core' ); ?></h1>
+            <p><?php echo esc_html__( 'Configura el recargo aplicado al subtotal de productos cuando el cliente selecciona Addi.', 'antonieta-core' ); ?></p>
+            <div class="notice notice-warning inline">
+                <p><?php echo esc_html__( 'Antes de activar este recargo, desactiva cualquier otro plugin o configuración que cobre un recargo para Addi, así evitas cargos duplicados.', 'antonieta-core' ); ?></p>
+            </div>
 
             <form method="post" action="options.php">
-                <?php settings_fields( 'antonieta_sistecredito_fee_group' ); ?>
+                <?php settings_fields( 'antonieta_addi_fee_group' ); ?>
 
                 <table class="form-table" role="presentation">
                     <tr>
@@ -132,17 +120,17 @@ class Antonieta_Sistecredito_Fee {
                                     value="yes"
                                     <?php checked( $settings['enabled'], 'yes' ); ?>
                                 >
-                                <?php echo esc_html__( 'Aplicar el recargo al seleccionar SisteCrédito', 'antonieta-core' ); ?>
+                                <?php echo esc_html__( 'Aplicar el recargo al seleccionar Addi', 'antonieta-core' ); ?>
                             </label>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">
-                            <label for="antonieta-sistecredito-percentage"><?php echo esc_html__( 'Porcentaje', 'antonieta-core' ); ?></label>
+                            <label for="antonieta-addi-percentage"><?php echo esc_html__( 'Porcentaje', 'antonieta-core' ); ?></label>
                         </th>
                         <td>
                             <input
-                                id="antonieta-sistecredito-percentage"
+                                id="antonieta-addi-percentage"
                                 name="<?php echo esc_attr( self::OPTION_NAME ); ?>[percentage]"
                                 type="number"
                                 min="0"
@@ -155,11 +143,11 @@ class Antonieta_Sistecredito_Fee {
                     </tr>
                     <tr>
                         <th scope="row">
-                            <label for="antonieta-sistecredito-label"><?php echo esc_html__( 'Mensaje del recargo', 'antonieta-core' ); ?></label>
+                            <label for="antonieta-addi-label"><?php echo esc_html__( 'Mensaje del recargo', 'antonieta-core' ); ?></label>
                         </th>
                         <td>
                             <input
-                                id="antonieta-sistecredito-label"
+                                id="antonieta-addi-label"
                                 name="<?php echo esc_attr( self::OPTION_NAME ); ?>[label]"
                                 type="text"
                                 value="<?php echo esc_attr( $settings['label'] ); ?>"
@@ -177,9 +165,6 @@ class Antonieta_Sistecredito_Fee {
         <?php
     }
 
-    /**
-     * Conserva en la sesión el método seleccionado durante la actualización AJAX.
-     */
     public static function save_payment_method( $post_data ) {
         if ( ! function_exists( 'WC' ) || ! WC()->session ) {
             return;
@@ -195,9 +180,6 @@ class Antonieta_Sistecredito_Fee {
         }
     }
 
-    /**
-     * Agrega el recargo configurado únicamente para el gateway wcsistecredito.
-     */
     public static function add_fee( $cart ) {
         if ( is_admin() && ! defined( 'DOING_AJAX' ) ) {
             return;
@@ -251,9 +233,6 @@ class Antonieta_Sistecredito_Fee {
         );
     }
 
-    /**
-     * Solicita el recálculo del checkout clásico al cambiar el medio de pago.
-     */
     public static function refresh_checkout_on_payment_change() {
         if ( ! function_exists( 'is_checkout' ) || ! is_checkout() ) {
             return;

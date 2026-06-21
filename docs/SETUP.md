@@ -102,6 +102,43 @@ wp plugin install antonieta-core --activate
 
 ## ⚙️ Configuración
 
+### Configurar el Recargo Addi
+
+1. Desactivar primero cualquier plugin o configuración anterior que cobre un recargo para Addi.
+2. Ir a **WordPress Admin → WooCommerce → Recargo Addi**.
+3. Definir el porcentaje y el mensaje que verá el cliente.
+4. Marcar **Activar recargo**.
+5. Hacer clic en **Guardar cambios**.
+
+Valores predeterminados:
+
+- Estado: desactivado, para evitar cobros duplicados
+- Porcentaje: 10%
+- Mensaje: `Adicional por financiación Addi`
+- Gateway: `addi`
+- Impuestos: no gravable
+
+---
+
+### Configurar el Recargo SisteCrédito
+
+1. Ir a **WordPress Admin → WooCommerce → Recargo SisteCrédito**.
+2. Activar o desactivar la casilla **Activar recargo**.
+3. Indicar el porcentaje entre `0` y `100` (admite dos decimales).
+4. Editar el mensaje que verá el cliente en los totales.
+5. Hacer clic en **Guardar cambios**.
+
+Valores predeterminados:
+
+- Estado: activo
+- Porcentaje: 10%
+- Mensaje: `Adicional por financiación SisteCrédito`
+- Impuestos: no gravable
+
+La configuración solo afecta el gateway `wcsistecredito`; no modifica Addi ni otros métodos de pago.
+
+---
+
 ### Cambiar Opciones de Pauta
 
 **Archivo**: `includes/class-order-meta.php` (línea ~20)

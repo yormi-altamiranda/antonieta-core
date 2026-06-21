@@ -23,6 +23,7 @@ Bienvenido a la documentación de **Antonieta Core**. Esta carpeta contiene todo
 - Pasos de instalación (3 opciones)
 - Verificación post-instalación
 - Configuración personalizada:
+  - Configurar recargos de SisteCrédito y Addi
   - Cambiar opciones de Pauta
   - Cambiar opciones de Canal
   - Cambiar métodos de pago en POS
@@ -58,6 +59,8 @@ Bienvenido a la documentación de **Antonieta Core**. Esta carpeta contiene todo
 - `Antonieta_Order_Meta` - Pauta y Canal
 - `Antonieta_Search_EAN` - Búsqueda por EAN
 - `Antonieta_Frontend` - Hooks de frontend
+- `Antonieta_Sistecredito_Fee` - Recargo configurable de SisteCrédito
+- `Antonieta_Addi_Fee` - Recargo configurable de Addi
 - Relaciones entre módulos
 - Constantes globales
 
@@ -93,7 +96,7 @@ Bienvenido a la documentación de **Antonieta Core**. Esta carpeta contiene todo
 
 1. Lee: [README.md](README.md) - Entender qué hace
 2. Sigue: [SETUP.md](SETUP.md) - Instalar y configurar
-3. Personaliza: Cambiar opciones de Pauta/Canal en SETUP
+3. Personaliza: Configurar recargos y opciones de Pauta/Canal en SETUP
 4. Si algo falla: Usa sección "Troubleshooting" de SETUP
 
 **Tiempo estimado**: 30-45 minutos
@@ -134,6 +137,16 @@ Bienvenido a la documentación de **Antonieta Core**. Esta carpeta contiene todo
 ---
 
 ## 🗂️ Mapeo de Características
+
+### Recargos de SisteCrédito y Addi
+
+| Aspecto | Ubicación | Archivo |
+|---------|-----------|---------|
+| Cómo configurar | SETUP | [SETUP.md](SETUP.md#configurar-el-recargo-addi) |
+| Arquitectura | ARCHITECTURE | [ARCHITECTURE.md](ARCHITECTURE.md#7-antonieta_addi_fee--recargo-de-addi) |
+| Referencia API | MODULES | [MODULES.md](MODULES.md#-antonieta_addi_fee) |
+
+---
 
 ### Campo: Cédula de Ciudadanía
 

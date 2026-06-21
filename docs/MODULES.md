@@ -1,5 +1,20 @@
 # Referencia API - Módulos PHP
 
+## 💳 Antonieta_Addi_Fee
+
+**Archivo**: [includes/class-addi-fee.php](../includes/class-addi-fee.php)
+
+Gestiona el recargo financiero de Addi en el checkout clásico de WooCommerce.
+
+- Usa exclusivamente el gateway `addi`.
+- El estado, porcentaje y mensaje se administran en **WooCommerce → Recargo Addi**.
+- Usa por defecto 10% y el mensaje `Adicional por financiación Addi`.
+- Permanece desactivado inicialmente para prevenir cobros dobles.
+- Calcula sobre `$cart->get_cart_contents_total()` y añade un fee no gravable.
+- No modifica SisteCrédito ni otros métodos de pago.
+
+Antes de activarlo debe deshabilitarse cualquier otra configuración que cobre un recargo para Addi.
+
 ## 💳 Antonieta_Sistecredito_Fee
 
 **Archivo**: [includes/class-sistecredito-fee.php](../includes/class-sistecredito-fee.php)
@@ -8,8 +23,10 @@ Gestiona el recargo financiero de SisteCrédito en el checkout clásico de WooCo
 
 - Escucha `woocommerce_checkout_update_order_review` para conservar el gateway seleccionado.
 - Escucha `woocommerce_cart_calculate_fees` con prioridad 99.
-- Aplica un 10% sobre `$cart->get_cart_contents_total()` solo para `wcsistecredito`.
-- Añade `Costo financiero SisteCrédito` como fee no gravable.
+- Aplica el porcentaje configurado sobre `$cart->get_cart_contents_total()` solo para `wcsistecredito`.
+- El estado, porcentaje y mensaje se administran en **WooCommerce → Recargo SisteCrédito**.
+- Usa por defecto 10% y el mensaje `Adicional por financiación SisteCrédito`.
+- Añade el concepto como fee no gravable.
 - No modifica Addi ni otros métodos de pago.
 - Solicita `update_checkout` cuando cambia el radio de método de pago.
 
@@ -713,7 +730,7 @@ antonieta-core.php (Main)
 Definidas en `antonieta-core.php`:
 
 ```php
-define('ANTONIETA_CORE_VERSION', '1.0.0');          // Versión actual
+define('ANTONIETA_CORE_VERSION', '1.3.0');          // Versión actual
 define('ANTONIETA_CORE_DIR', plugin_dir_path(__FILE__));  // /path/to/plugin/
 define('ANTONIETA_CORE_URL', plugin_dir_url(__FILE__));   // https://site/wp-content/plugins/...
 ```
