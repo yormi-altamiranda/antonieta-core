@@ -15,7 +15,7 @@ Hook: before_woocommerce_init
   ↓
 Hook: plugins_loaded (Fase 2)
   ├─ Validar que WooCommerce existe
-  ├─ Cargar 7 clases módulo
+  ├─ Cargar 6 clases módulo
   └─ Ejecutar `init()` en cada clase
 ```
 
@@ -277,17 +277,18 @@ woocommerce_before_add_to_cart_button (acción)
 
 ---
 
-### 6. **Antonieta_Sistecredito_Fee** → Recargo de SisteCrédito
+### 6. **Antonieta_Financing_Fees** → Ajustes por Pasarela
 
-**Archivo**: [includes/class-sistecredito-fee.php](../includes/class-sistecredito-fee.php)
+**Archivo**: [includes/class-financing-fees.php](../includes/class-financing-fees.php)
 
 **Responsabilidades:**
 
+- Administrar una lista dinámica de reglas desde una sola pantalla de WooCommerce
 - Guardar en sesión el gateway elegido durante la actualización del checkout clásico
-- Aplicar un fee no gravable y configurable sobre el subtotal de productos
-- Ejecutar el cálculo exclusivamente para el ID de gateway configurado (predeterminado: `wcsistecredito`)
-- Actualizar los totales cuando cambia el radio de medio de pago
-- Administrar estado, porcentaje y mensaje desde WooCommerce
+- Aplicar un recargo o descuento no gravable sobre el subtotal de productos
+- Desactivar reglas con IDs vacíos o repetidos
+- Migrar las opciones guardadas por los módulos anteriores
+- Actualizar los totales con un solo listener al cambiar el medio de pago
 
 **Flujo:**
 
@@ -298,44 +299,15 @@ woocommerce_checkout_update_order_review
   └─ Guardar chosen_payment_method en la sesión
   ↓
 woocommerce_cart_calculate_fees (prioridad 99)
-  ├─ Si gateway != ID configurado → No hacer nada
-  └─ Si gateway = ID configurado (predeterminado: wcsistecredito)
+  ├─ Recorrer las reglas configuradas
+  ├─ Ignorar métodos desactivados o con ID diferente
+  └─ Para el único ID coincidente
       ├─ Base = get_cart_contents_total()
-      └─ Fee = base × porcentaje configurado, no gravable
+      ├─ Recargo = base × porcentaje configurado
+      └─ Descuento = -(base × porcentaje configurado)
 ```
 
-Este módulo no modifica Addi ni otros gateways.
-
----
-
-### 7. **Antonieta_Addi_Fee** → Recargo de Addi
-
-**Archivo**: [includes/class-addi-fee.php](../includes/class-addi-fee.php)
-
-**Responsabilidades:**
-
-- Administrar estado, porcentaje y mensaje desde WooCommerce
-- Aplicar un fee no gravable sobre el subtotal de productos
-- Ejecutar el cálculo exclusivamente para el ID de gateway configurado (predeterminado: `addi`)
-- Actualizar los totales al cambiar el medio de pago sin duplicar listeners
-
-**Flujo:**
-
-```
-Cliente selecciona Addi
-  ↓
-woocommerce_checkout_update_order_review
-  └─ Guardar chosen_payment_method en la sesión
-  ↓
-woocommerce_cart_calculate_fees (prioridad 99)
-  ├─ Si el recargo está desactivado → No hacer nada
-  ├─ Si gateway != ID configurado → No hacer nada
-  └─ Si gateway = ID configurado (predeterminado: addi)
-      ├─ Base = get_cart_contents_total()
-      └─ Fee = base × porcentaje configurado, no gravable
-```
-
-El recargo está desactivado por defecto para evitar duplicarlo con plugins o configuraciones anteriores.
+Las reglas iniciales son SisteCrédito (activa) y Addi (desactivada), pero pueden eliminarse o reemplazarse por otras pasarelas.
 
 ---
 

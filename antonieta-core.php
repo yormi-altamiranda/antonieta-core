@@ -3,7 +3,7 @@
  * Plugin Name:       Antonieta Core
  * Plugin URI:        https://antonietaplus.com
  * Description:       Funcionalidades core de WooCommerce, checkout, POS y búsqueda EAN para Antonieta Plus.
- * Version:           1.4.0
+ * Version:           1.6.0
  * Author:            Parchita Creative
  * Author URI:        https://parchitacreative.com
  * Text Domain:       antonieta-core
@@ -16,7 +16,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'ANTONIETA_CORE_VERSION', '1.4.0' );
+define( 'ANTONIETA_CORE_VERSION', '1.6.0' );
 define( 'ANTONIETA_CORE_DIR',     plugin_dir_path( __FILE__ ) );
 define( 'ANTONIETA_CORE_URL',     plugin_dir_url( __FILE__ ) );
 
@@ -48,14 +48,12 @@ function antonieta_core_load() {
     require_once ANTONIETA_CORE_DIR . 'includes/class-order-meta.php';
     require_once ANTONIETA_CORE_DIR . 'includes/class-search-ean.php';
     require_once ANTONIETA_CORE_DIR . 'includes/class-frontend.php';
-    require_once ANTONIETA_CORE_DIR . 'includes/class-sistecredito-fee.php';
-    require_once ANTONIETA_CORE_DIR . 'includes/class-addi-fee.php';
+    require_once ANTONIETA_CORE_DIR . 'includes/class-financing-fees.php';
 
     Antonieta_Assets::init();
     Antonieta_Checkout::init();
     Antonieta_Order_Meta::init();
     Antonieta_Search_EAN::init();
     Antonieta_Frontend::init();
-    Antonieta_Sistecredito_Fee::init();
-    Antonieta_Addi_Fee::init();
+    Antonieta_Financing_Fees::init();
 }

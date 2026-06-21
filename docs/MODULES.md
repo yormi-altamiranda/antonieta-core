@@ -1,35 +1,21 @@
 # Referencia API - Módulos PHP
 
-## 💳 Antonieta_Addi_Fee
+## 💳 Antonieta_Financing_Fees
 
-**Archivo**: [includes/class-addi-fee.php](../includes/class-addi-fee.php)
+**Archivo**: [includes/class-financing-fees.php](../includes/class-financing-fees.php)
 
-Gestiona el recargo financiero de Addi en el checkout clásico de WooCommerce.
+Gestiona reglas dinámicas de recargos y descuentos para cualquier método de pago.
 
-- Usa por defecto el gateway `addi`, cuyo ID también es editable.
-- El estado, ID del gateway, porcentaje y mensaje se administran en **WooCommerce → Recargo Addi**.
-- Usa por defecto 10% y el mensaje `Adicional por financiación Addi`.
-- Permanece desactivado inicialmente para prevenir cobros dobles.
+- Usa un único hook `woocommerce_cart_calculate_fees` con prioridad 99.
 - Calcula sobre `$cart->get_cart_contents_total()` y añade un fee no gravable.
-- No modifica SisteCrédito ni otros métodos de pago.
+- Administra activo, nombre, ID, tipo, porcentaje y mensaje en **WooCommerce → Ajustes por pasarela**.
+- Permite añadir o eliminar reglas sin modificar PHP.
+- Incluye inicialmente los IDs `wcsistecredito` y `addi`.
+- Desactiva reglas con ID vacío o repetido.
+- Migra automáticamente las opciones guardadas por las pantallas anteriores.
+- Solicita una única actualización del checkout al cambiar el medio de pago.
 
-Antes de activarlo debe deshabilitarse cualquier otra configuración que cobre un recargo para Addi.
-
-## 💳 Antonieta_Sistecredito_Fee
-
-**Archivo**: [includes/class-sistecredito-fee.php](../includes/class-sistecredito-fee.php)
-
-Gestiona el recargo financiero de SisteCrédito en el checkout clásico de WooCommerce.
-
-- Escucha `woocommerce_checkout_update_order_review` para conservar el gateway seleccionado.
-- Escucha `woocommerce_cart_calculate_fees` con prioridad 99.
-- Aplica el porcentaje configurado sobre `$cart->get_cart_contents_total()` solo para `wcsistecredito`.
-- El estado, ID del gateway, porcentaje y mensaje se administran en **WooCommerce → Recargo SisteCrédito**.
-- Usa por defecto el gateway `wcsistecredito`, cuyo ID también es editable.
-- Usa por defecto 10% y el mensaje `Adicional por financiación SisteCrédito`.
-- Añade el concepto como fee no gravable.
-- No modifica Addi ni otros métodos de pago.
-- Solicita `update_checkout` cuando cambia el radio de método de pago.
+Los recargos usan importes positivos y los descuentos importes negativos, ambos no gravables. Addi permanece desactivado inicialmente para prevenir cobros dobles con configuraciones anteriores.
 
 ## 📦 Antonieta_Assets
 
@@ -731,7 +717,7 @@ antonieta-core.php (Main)
 Definidas en `antonieta-core.php`:
 
 ```php
-define('ANTONIETA_CORE_VERSION', '1.4.0');          // Versión actual
+define('ANTONIETA_CORE_VERSION', '1.6.0');          // Versión actual
 define('ANTONIETA_CORE_DIR', plugin_dir_path(__FILE__));  // /path/to/plugin/
 define('ANTONIETA_CORE_URL', plugin_dir_url(__FILE__));   // https://site/wp-content/plugins/...
 ```

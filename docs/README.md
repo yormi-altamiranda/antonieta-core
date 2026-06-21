@@ -9,12 +9,11 @@
 - Búsqueda de productos por código EAN en YITH POS
 - Validación de variantes en el carrito
 - Frontend hooks sin dependencia de Shoptimizer
-- Recargo financiero de SisteCrédito en el checkout clásico
-- Recargo financiero configurable de Addi en el checkout clásico
+- Reglas dinámicas de recargos y descuentos por método de pago en el checkout clásico
 
 **Información del Plugin:**
 
-- Versión: 1.4.0
+- Versión: 1.6.0
 - Requiere: WordPress 6.0+, PHP 8.0+, WooCommerce 8.0+
 - Compatibilidad: HPOS (High Performance Order Storage)
 - Dominio de traducción: `antonieta-core`
@@ -41,8 +40,7 @@ antonieta-core/
     ├── class-order-meta.php         # Metadatos de pedido (Canal/Pauta)
     ├── class-search-ean.php         # Búsqueda por EAN en POS
     ├── class-frontend.php           # Hooks de frontend
-    ├── class-sistecredito-fee.php   # Recargo de SisteCrédito
-    └── class-addi-fee.php           # Recargo de Addi
+    └── class-financing-fees.php     # Ajustes dinámicos por pasarela
 ```
 
 ---
@@ -141,6 +139,23 @@ En [pos-meta-fields.js](../assets/js/pos-meta-fields.js), edita el `<select>` de
 ---
 
 ## 📝 Changelog
+
+### v1.6.0
+
+- Tabla dinámica para añadir y eliminar reglas desde WordPress
+- Soporte para cualquier ID de método de pago
+- Selector de tipo **Recargo** o **Descuento**
+- Campos configurables: activo, nombre, ID, tipo, porcentaje y mensaje
+- Migración automática de las configuraciones anteriores de SisteCrédito y Addi
+- Reglas sin ID o con IDs duplicados se desactivan de forma segura
+
+### v1.5.0
+
+- Pantalla única **WooCommerce → Recargos financieros**
+- Una sola clase y rutina de cálculo para SisteCrédito y Addi
+- Migración automática de las configuraciones guardadas anteriormente
+- Validación que impide usar el mismo ID de gateway en ambos recargos
+- Eliminación de listeners y hooks duplicados
 
 ### v1.4.0
 

@@ -23,7 +23,7 @@ Bienvenido a la documentación de **Antonieta Core**. Esta carpeta contiene todo
 - Pasos de instalación (3 opciones)
 - Verificación post-instalación
 - Configuración personalizada:
-  - Configurar recargos de SisteCrédito y Addi
+  - Configurar recargos y descuentos para cualquier pasarela
   - Cambiar opciones de Pauta
   - Cambiar opciones de Canal
   - Cambiar métodos de pago en POS
@@ -59,8 +59,7 @@ Bienvenido a la documentación de **Antonieta Core**. Esta carpeta contiene todo
 - `Antonieta_Order_Meta` - Pauta y Canal
 - `Antonieta_Search_EAN` - Búsqueda por EAN
 - `Antonieta_Frontend` - Hooks de frontend
-- `Antonieta_Sistecredito_Fee` - Recargo configurable de SisteCrédito
-- `Antonieta_Addi_Fee` - Recargo configurable de Addi
+- `Antonieta_Financing_Fees` - Ajustes dinámicos por pasarela
 - Relaciones entre módulos
 - Constantes globales
 
@@ -138,13 +137,13 @@ Bienvenido a la documentación de **Antonieta Core**. Esta carpeta contiene todo
 
 ## 🗂️ Mapeo de Características
 
-### Recargos de SisteCrédito y Addi
+### Ajustes por Pasarela
 
 | Aspecto | Ubicación | Archivo |
 |---------|-----------|---------|
-| Cómo configurar | SETUP | [SETUP.md](SETUP.md#configurar-el-recargo-addi) |
-| Arquitectura | ARCHITECTURE | [ARCHITECTURE.md](ARCHITECTURE.md#7-antonieta_addi_fee--recargo-de-addi) |
-| Referencia API | MODULES | [MODULES.md](MODULES.md#-antonieta_addi_fee) |
+| Cómo configurar | SETUP | [SETUP.md](SETUP.md#configurar-ajustes-por-pasarela) |
+| Arquitectura | ARCHITECTURE | [ARCHITECTURE.md](ARCHITECTURE.md#6-antonieta_financing_fees--ajustes-por-pasarela) |
+| Referencia API | MODULES | [MODULES.md](MODULES.md#-antonieta_financing_fees) |
 
 ---
 

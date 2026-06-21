@@ -102,44 +102,26 @@ wp plugin install antonieta-core --activate
 
 ## ⚙️ Configuración
 
-### Configurar el Recargo Addi
+### Configurar Ajustes por Pasarela
 
-1. Desactivar primero cualquier plugin o configuración anterior que cobre un recargo para Addi.
-2. Ir a **WordPress Admin → WooCommerce → Recargo Addi**.
-3. Confirmar el ID del método de pago (`addi` por defecto).
-4. Definir el porcentaje y el mensaje que verá el cliente.
-5. Marcar **Activar recargo**.
-6. Hacer clic en **Guardar cambios**.
+1. Ir a **WordPress Admin → WooCommerce → Ajustes por pasarela**.
+2. Editar las reglas existentes o hacer clic en **Añadir regla**.
+3. Completar activo, nombre, ID de pasarela, tipo, porcentaje y mensaje.
+4. Elegir **Recargo** para sumar o **Descuento** para restar el porcentaje.
+5. Hacer clic en **Guardar cambios**.
 
-Valores predeterminados:
-
-- Estado: desactivado, para evitar cobros duplicados
-- Porcentaje: 10%
-- Mensaje: `Adicional por financiación Addi`
-- ID de gateway: `addi` (editable)
-- Impuestos: no gravable
-
----
-
-### Configurar el Recargo SisteCrédito
-
-1. Ir a **WordPress Admin → WooCommerce → Recargo SisteCrédito**.
-2. Activar o desactivar la casilla **Activar recargo**.
-3. Confirmar el ID del método de pago (`wcsistecredito` por defecto).
-4. Indicar el porcentaje entre `0` y `100` (admite dos decimales).
-5. Editar el mensaje que verá el cliente en los totales.
-6. Hacer clic en **Guardar cambios**.
+Para añadir una nueva pasarela no se modifica PHP: basta con conocer el valor exacto de su radio `payment_method`, crear una regla y activarla.
 
 Valores predeterminados:
 
-- Estado: activo
-- Porcentaje: 10%
-- Mensaje: `Adicional por financiación SisteCrédito`
-- Impuestos: no gravable
+| Método | Estado | ID | Porcentaje | Mensaje |
+|--------|--------|----|------------|---------|
+| SisteCrédito | Activo | `wcsistecredito` | 10% | `Adicional por financiación SisteCrédito` |
+| Addi | Desactivado | `addi` | 10% | `Adicional por financiación Addi` |
 
-La configuración solo afecta el ID de gateway indicado en ese campo; no modifica Addi ni otros métodos de pago mientras conserve el valor predeterminado `wcsistecredito`.
+Los IDs deben ser únicos. Una regla sin ID o con un ID repetido se guarda desactivada y WordPress muestra el motivo.
 
-Si el proveedor cambia el valor del radio `payment_method`, actualiza únicamente el campo **ID del método de pago**. Si se guarda vacío, Antonieta Core restaura el ID predeterminado.
+Antes de activar Addi, desactiva cualquier otro plugin o configuración que cobre ese recargo para evitar cargos duplicados.
 
 ---
 
